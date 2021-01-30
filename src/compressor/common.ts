@@ -87,6 +87,7 @@ export interface Compressors {
   object: Compressor<any>,
   string: Compressor<string>,
   date: Compressor<number>,
+  error: Compressor<Error>,
   number: Compressor<number>,
   template: {
     Object: new (a: any, b: any) => TemplateCompressor<any>;

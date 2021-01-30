@@ -5,6 +5,7 @@ import { compressNumber } from "./compressor/number";
 import { compressObject } from "./compressor/object";
 import { Compressors, Context, InvertedIndex, CompressOptions } from "./compressor/common";
 import { compressDate } from "./compressor/date";
+import { compressError } from "./compressor/error";
 import { ZipsonWriter } from "./compressor/writer";
 import { TemplateObject } from "./compressor/template/object";
 export * from "./compressor/common";
@@ -15,6 +16,7 @@ const compressors: Compressors = {
   object: compressObject,
   string: compressString,
   date: compressDate,
+  error: compressError,
   number: compressNumber,
   template: {
     Object: TemplateObject

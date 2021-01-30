@@ -202,4 +202,9 @@ describe('scalar', function() {
   it('date', function() {
     testPackUnpack(new Date());
   });
+
+  it('error', function() {
+    testPackUnpack(new Error('error'));
+  });
+
 });

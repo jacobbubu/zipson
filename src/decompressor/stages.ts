@@ -1,4 +1,4 @@
-import { ARRAY_START_TOKEN, OBJECT_START_TOKEN, ARRAY_REPEAT_TOKEN, ARRAY_REPEAT_MANY_TOKEN,
+import { ERROR_TOKEN, ARRAY_START_TOKEN, OBJECT_START_TOKEN, ARRAY_REPEAT_TOKEN, ARRAY_REPEAT_MANY_TOKEN,
     TEMPLATE_OBJECT_START, TEMPLATE_OBJECT_END, TEMPLATE_OBJECT_FINAL } from "../constants";
 import { Cursor, OrderedIndex, ArrayTarget, TargetType, Target, TemplateObjectTarget, SkipScalar, SKIP_SCALAR } from "./common";
 import { decompressScalar } from "./scalar";
@@ -8,7 +8,10 @@ export function decompressStages(cursor: Cursor, data: string, orderedIndex: Ord
   for(; cursor.index < data.length; cursor.index++) {
     const c = data[cursor.index];
 
-    if(c === ARRAY_START_TOKEN) {
+    if(c === ERROR_TOKEN) {
+      cursor.currentTarget = { type: TargetType.ERROR, value: undefined };
+      cursor.stack[++cursor.pointer] = cursor.currentTarget;
+    } else if(c === ARRAY_START_TOKEN) {
       cursor.currentTarget = { type: TargetType.ARRAY, value: [] };
       cursor.stack[++cursor.pointer] = cursor.currentTarget;
     } else if(c === OBJECT_START_TOKEN) {
@@ -25,7 +28,7 @@ export function decompressStages(cursor: Cursor, data: string, orderedIndex: Ord
     } else if(c === TEMPLATE_OBJECT_START && (cursor.currentTarget.type === TargetType.TEMPLATE_OBJECT || cursor.currentTarget.type === TargetType.OBJECT || cursor.currentTarget.type === TargetType.ARRAY)) {
       if(cursor.currentTarget.type !== TargetType.TEMPLATE_OBJECT) {
         const parentTarget = cursor.currentTarget;
-        cursor.currentTarget = { type: TargetType.TEMPLATE_OBJECT, value: void 0, currentTokens: [], currentRoute: [], paths: [], level: 0, parentTarget };
+        cursor.currentTarget = { type: TargetType.TEMPLATE_OBJECT, value: undefined, currentTokens: [], currentRoute: [], paths: [], level: 0, parentTarget };
         cursor.stack[++cursor.pointer] = cursor.currentTarget;
       } else {
         // Add any found tokens prior to next nested as separate paths

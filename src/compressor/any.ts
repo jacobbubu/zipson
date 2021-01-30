@@ -29,6 +29,8 @@ export function compressAny(
     compressors.array(compressors, context, obj, invertedIndex, writer, options);
   } else if(obj instanceof Date) {
     compressors.date(compressors, context, obj.getTime(), invertedIndex, writer, options);
+  } else if(obj instanceof Error) {
+    compressors.error(compressors, context, obj, invertedIndex, writer, options);
   } else {
     compressors.object(compressors, context, obj, invertedIndex, writer, options);
   }

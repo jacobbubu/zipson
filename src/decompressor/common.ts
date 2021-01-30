@@ -27,6 +27,7 @@ export enum TargetType {
   ARRAY = 'ARRAY',
   OBJECT = 'OBJECT',
   SCALAR = 'SCALAR',
+  ERROR = 'ERROR',
   TEMPLATE_OBJECT = 'TEMPLATE_OBJECT',
   TEMPLATE_OBJECT_PROPERTIES = 'TEMPLATE_OBJECT_PROPERTIES',
   TEMPLATE_OBJECT_ELEMENTS = 'TEMPLATE_OBJECT_ELEMENTS',
@@ -35,7 +36,7 @@ export enum TargetType {
 /**
  * A current output target of specified type
  */
-export type Target = ScalarTarget | ArrayTarget | ObjectTarget | TemplateObjectTarget | TemplateObjectPropertiesTarget | TemplateObjectElementsTarget;
+export type Target = ScalarTarget | ArrayTarget | ObjectTarget | ErrorTarget | TemplateObjectTarget | TemplateObjectPropertiesTarget | TemplateObjectElementsTarget;
 
 /**
  * Basic output targets
@@ -44,6 +45,7 @@ export interface BaseTarget<T> { type: T; value: any; }
 export interface ScalarTarget extends BaseTarget<TargetType.SCALAR> { value: any; }
 export interface ArrayTarget extends BaseTarget<TargetType.ARRAY> { value: any[]; }
 export interface ObjectTarget extends BaseTarget<TargetType.OBJECT> { key?: any }
+export interface ErrorTarget extends BaseTarget<TargetType.ERROR> { value: Error | undefined; }
 
 /**
  *  Template object output targets

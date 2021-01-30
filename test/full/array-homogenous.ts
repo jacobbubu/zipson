@@ -16,6 +16,11 @@ describe('array-homogenous', function() {
     testPackUnpack([]);
   });
 
+  it('errorOne', function() {
+    testPackUnpackHomogeneousArray(new Error(), ONE);
+    testPackUnpackHomogeneousArray(new Error('Error'), ONE);
+  });
+
   it('nullOne', function() {
     testPackUnpackHomogeneousArray(null, ONE);
   });

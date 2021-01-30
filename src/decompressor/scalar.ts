@@ -5,15 +5,52 @@ import { STRING_TOKEN, UNREFERENCED_STRING_TOKEN, ESCAPE_CHARACTER, DELIMITING_T
   UNREFERENCED_FLOAT_TOKEN, UNREFERENCED_DATE_TOKEN, UNREFERENCED_LP_DATE_TOKEN, BOOLEAN_TRUE_TOKEN,
   BOOLEAN_FALSE_TOKEN, NULL_TOKEN, UNDEFINED_TOKEN, REGEX_ESCAPED_STRING_TOKEN,
   INTEGER_SMALL_TOKEN_EXCLUSIVE_BOUND_LOWER, INTEGER_SMALL_TOKEN_EXCLUSIVE_BOUND_UPPER, INTEGER_SMALL_TOKEN_OFFSET,
-  REGEX_ESCAPED_ESCAPE_CHARACTER
+  REGEX_ESCAPED_ESCAPE_CHARACTER, ERROR_TOKEN, ERROR_TOKEN_END
 } from "../constants";
 
 import { SKIP_SCALAR, OrderedIndex, Cursor, Scalar, SkipScalar } from "./common";
 import { decompressInteger, decompressFloat } from "../util";
 
+function decompressString(token: string, data: string, cursor: Cursor, orderedIndex: OrderedIndex): string | undefined {
+  const startIndex = cursor.index;
+  let endIndex = cursor.index + 1;
+
+  // Find end index of token value
+  let foundStringToken;
+  if(
+    ((token === STRING_TOKEN) && (foundStringToken = STRING_TOKEN))
+    || ((token === UNREFERENCED_STRING_TOKEN) && (foundStringToken = UNREFERENCED_STRING_TOKEN))
+  ) {
+    let escaped = true;
+    while(escaped && endIndex < data.length) {
+      endIndex = data.indexOf(foundStringToken, endIndex);
+      let iNumEscapeCharacters = 1;
+      escaped = false;
+      while(data[endIndex - iNumEscapeCharacters] === ESCAPE_CHARACTER) {
+          escaped = iNumEscapeCharacters % 2 === 1;
+          iNumEscapeCharacters++;
+      }
+      endIndex++;
+    }
+    if(endIndex <= startIndex) { endIndex = data.length; }
+  }
+
+  if(!cursor.drain && endIndex === data.length) { return undefined; }
+
+  cursor.index = endIndex - 1;
+  return data.substring(startIndex + 1, endIndex - 1);
+}
+
 export function decompressScalar(token: string, data: string, cursor: Cursor, orderedIndex: OrderedIndex): Scalar | SkipScalar {
   const startIndex = cursor.index;
   let endIndex = cursor.index + 1;
+
+  // if(token === ERROR_TOKEN) {
+  //   cursor.index += 1;
+  //   const errorMessage = decompressString(data[cursor.index], data, cursor, orderedIndex);
+  //   if (errorMessage === undefined) { return SKIP_SCALAR; }
+  //   return new Error(errorMessage);
+  // }
 
   // Find end index of token value
   let foundStringToken;

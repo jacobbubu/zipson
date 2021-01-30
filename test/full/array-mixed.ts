@@ -2,11 +2,13 @@ import { describe, it } from 'mocha';
 import { testPackUnpack } from './util';
 
 describe('array-mixed', function() {
-    it('oneOfEach', function() {
+  it('oneOfEach', function() {
     testPackUnpack([
       1,
       null,
       undefined,
+      new Error(),
+      new Error('Error'),
       1029831209,
       { x: 123, y: { z: 'asd{f]s' }, z: [234, '{]324asd' ] },
       -5,
@@ -27,6 +29,8 @@ describe('array-mixed', function() {
       null,
       { x: 123 },
       undefined,
+      new Error(),
+      new Error('Error'),
       1029831209,
       1,
       -5,
