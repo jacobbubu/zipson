@@ -1,10 +1,6 @@
-# <span><img src="https://cdn.rawgit.com/jgranstrom/zipson/master/docs/icon.svg" width="30" height="30">&nbsp;zipson</span>
-
-[![Build Status](https://travis-ci.org/jgranstrom/zipson.svg?branch=master&style=flat)](https://travis-ci.org/jgranstrom/zipson)
-[![npm version](https://badge.fury.io/js/zipson.svg)](http://badge.fury.io/js/zipson)
-[![devDependencies Status](https://david-dm.org/jgranstrom/zipson/dev-status.svg)](https://david-dm.org/jgranstrom/zipson?type=dev)
-
 Zipson is a drop-in alternative to JSON.parse/stringify with added compression and streaming support.
+
+forked from https://github.com/jgranstrom/zipson and add serialization for Error object.
 
 ![demo](/docs/demo.gif?raw=true)
 
@@ -32,7 +28,7 @@ Try the [online demo](https://jgranstrom.github.io/zipson/)
 
 As an npm module
 
-`npm install --save zipson`
+`npm install --save @jacobbubu/zipson`
 
 Or alternatively from `jsdelivr` with a script tag as a UMD bundle
 
